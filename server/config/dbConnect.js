@@ -13,7 +13,8 @@ async function dbConnect() {
   // Check if there is no existing connection
   if (!connection) {
     // Retrieve MongoDB connection string from environment variables
-    const url = "mongodb://localhost:27017/URLShortener";
+    // console.log("process.env: ", typeof(process.env.DB_URL));
+    const url = process.env.DB_URL;
     try {
       // Connect to MongoDB using the retrieved connection string
       connection = await mongoose.connect(url, {
@@ -24,7 +25,7 @@ async function dbConnect() {
     } catch (error) {
       // Log connection failure
       console.error("Unable to connect to MongoDB Atlas!");
-      console.error(error);
+      console.error(" Error : ", error);
       // Throw error for handling in middleware
       throw error;
     }
@@ -35,3 +36,5 @@ async function dbConnect() {
 
 // Export the function for use in other modules
 module.exports = dbConnect;
+
+// "mongodb://localhost:27017/URLShortener"

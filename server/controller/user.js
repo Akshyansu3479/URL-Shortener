@@ -12,7 +12,7 @@ const getAllUserUrls = async (req, res) => {
     if (id && id !== "") {
       // Connect to the database
       await dbConnect();
-
+ 
       // Find all URLs created by the user
       const userUrls = await urlModel.find({ userId: id });
 

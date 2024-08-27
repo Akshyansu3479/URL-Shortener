@@ -40,11 +40,12 @@ app.get("/", (req, res) => {
   res.status(200).json("Server is Live");
 });
 
-app.use(urlRouter);
-app.use(authRouter);
-app.use(userRouter);
+app.use(urlRouter);  // create or redirect url
+app.use(authRouter); // for sign up and login feature 
+app.use(userRouter); // API endpoint to get all url's shortened by user
 
 //create a server
 app.listen(port, (req, res) => {
   console.log("server listening at port " + port);
 });
+
