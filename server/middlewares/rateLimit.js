@@ -4,6 +4,7 @@ const rateLimit = async (req, res, next) => {
    
   try {
    const ip = req.connection.remoteAddress;
+   console.log("ip:", ip);
    const redisData = await redisClient
     .multi()
     .incr(ip)
