@@ -23,7 +23,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const corsOptions = {
   origin: isProduction ? process.env.CLIENT_PROD_URL : "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  preflightContinue: false,
+  preflightContinue: true,
   optionsSuccessStatus: 200,
 };
 
@@ -37,7 +37,9 @@ app.set("trust proxy", true);
 
 //get request when server is live
 app.get("/", (req, res) => {
-  res.status(200).json("Server is Live");
+  res.status(200).json({
+    message : "Server id Live"
+  });
 });
 
 app.use(urlRouter);  // create or redirect url

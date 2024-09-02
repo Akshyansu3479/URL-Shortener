@@ -22,27 +22,36 @@ export default function Home() {
 
     const data = new FormData(event.currentTarget);
 
+    
     //validating the given url
     const givenUrl = data.get("originalUrl");
 
+    // console.log("givenUrl: ", givenUrl);
+
     if (givenUrl) {
       try {
+        // console.log("Working");
+        
         setIsSubmitting(true);
         setResponseUrl("");
 
-        const response = await fetch("http://localhost:8080", {
+        const response = await fetch("http://lb-cli-serv-url-shrtnr-1049647747.ap-south-1.elb.amazonaws.com/create", {
           method: "POST",
           headers: {
+            "Accept": "*/*",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ originalUrl: data.get("originalUrl") }),
         });
+
+        console.log(response);
 
         if (response.status == 429) {
           toast.error("Too Many Requests. Please try again later.");
         } else if (response.status === 400) {
           toast.error("Invalid URL");
         }
+          
 
         // Assuming response is JSON
         const responseData = await response?.json();

@@ -12,6 +12,8 @@ const getSpecificUrl = async (req, res) => {
     // Destructure shortId from request parameters
     const { shortId } = req.params;
 
+    console.log("getsurl:", req.params);
+
     // Connect to the database
     await dbConnect();
 
@@ -27,9 +29,11 @@ const getSpecificUrl = async (req, res) => {
 
     // If original URL is found, redirect to it
     if (originalUrl) {
+      console.log("apiget: ", res.getHeaders());
       return res.redirect(originalUrl);
     } else {
       // If original URL is not found, send 404 status
+      console.log("apiget: ", res.getHeaders());
       return res.status(404).send("URL not found");
     }
   } catch (error) {
@@ -43,6 +47,8 @@ const getSpecificUrl = async (req, res) => {
 const createUrl = async (req, res) => {
   // Retrieve original URL from request body
   const { originalUrl } = req.body;
+
+  console.log("createsurl:", req.body);
 
   // Validate the original URL
   if (validUrl.isUri(originalUrl)) {
@@ -58,6 +64,8 @@ const createUrl = async (req, res) => {
 
         // track event
         trackEvent("Existing URL", shortenedURL);
+
+        console.log("api: ", res.getHeaders());
 
         return res.status(201).json(shortenedURL);
       } else {
@@ -78,6 +86,8 @@ const createUrl = async (req, res) => {
 
           // track event
           trackEvent("New URL shortened", originalUrl);
+
+          console.log("apifromcreateURL: ", res.getHeaders());
 
           // Send the newly created short URL to the client
           return res.status(201).json(`${process.env.REDIRECT_URL}/${shortId}`);
