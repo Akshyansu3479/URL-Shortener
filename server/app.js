@@ -1,5 +1,4 @@
-
-//console.log("Working1");
+/console.log("Working1");
 
 const express = require("express");
 const cors = require("cors");
@@ -32,7 +31,6 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
-
 
 // Disable X-Powered-By Header
 app.disable("x-powered-by");
@@ -69,6 +67,7 @@ app.use((req, res, next) => {
   next();
 });
 
+
 // Body parser middleware to handle JSON
 app.use(express.json());
 
@@ -92,4 +91,3 @@ app.use(userRouter);  // User-specific routes (e.g., fetching all URLs for a use
 app.listen(port, () => {
   console.log("Server is listening at port " + port);
 });
-	
