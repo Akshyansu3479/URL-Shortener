@@ -1,51 +1,95 @@
-//import express module
+
+//console.log("Working1");
+
 const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+
+// Import routers
 const authRouter = require("./routes/auth");
 const urlRouter = require("./routes/url");
-const cors = require("cors");
-
-//To access data from .env file
-const dotenv = require("dotenv");
 const userRouter = require("./routes/user");
-dotenv.config();
 
-//create express app
+dotenv.config();  // Load environment variables
+
 const app = express();
-app.use(express.json());
 
-//Define port
-const port = process.env.Port || 8080;
+//console.log("Working2");
 
-// Check environment
-const isProduction = process.env.NODE_ENV === "production";
+//app.use((req, res, next) => {
+ // console.log("Working3");
+ // console.log(res.getHeaders());
+  //next();
+//})
 
-// CORS Configuration
-const corsOptions = {
-  origin: isProduction ? process.env.CLIENT_PROD_URL : "*",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  preflightContinue: false,
-  optionsSuccessStatus: 200,
-};
+// rate limitter using express library
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 15 minutes
+  max: 50,
+  message: "Too many requests from this IP, please try again later.",
+});
 
-// This will allow the user in the frontend to consume the APIs that you have created without any problem.
-app.use(cors(corsOptions));
+app.use(limiter);
+
 
 // Disable X-Powered-By Header
 app.disable("x-powered-by");
 
-app.set("trust proxy", true);
+// Configure CORS to allow requests from any origin
+const corsOptions = {
+  origin: "*",  // Allow requests from any origin
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: false  // Credentials won't be allowed with '*'
+};
+app.use(cors(corsOptions));
 
-//get request when server is live
-app.get("/", (req, res) => {
-  res.status(200).json("Server is Live");
+// Handle preflight requests (OPTIONS) for all routes
+app.options('*', cors(corsOptions));  // This handles CORS preflight checks for all routes
+
+// Use helmet to set security headers
+app.use(helmet({
+  contentSecurityPolicy: false,  // Disable CSP for now (adjust based on your needs)
+  frameguard: {
+    action: 'deny'  // Prevent clickjacking by denying all iframe usage
+  }
+}));
+
+//console.log("Working4");
+
+app.use((req, res, next) => {
+  res.removeHeader('X-Frame-Options');  // Remove X-Frame-Options
+  res.setHeader('X-Frame-Options', 'ALLOWALL');  // Allow all frames
+  res.removeHeader('Content-Security-Policy');  // Remove CSP
+
+  // Log the headers before sending the response
+  console.log("Response Headers:", res.getHeaders());
+
+  next();
 });
 
-app.use(urlRouter);  // create or redirect url
-app.use(authRouter); // for sign up and login feature 
-app.use(userRouter); // API endpoint to get all url's shortened by user
+// Body parser middleware to handle JSON
+app.use(express.json());
 
-//create a server
-app.listen(port, (req, res) => {
-  console.log("server listening at port " + port);
+// Define port from environment variable or default to 8080
+const port = process.env.PORT || 8080;
+
+// Basic health check route
+app.get("/", async (req, res) => {
+  return res.status(200).json({
+    message: "Piyush bhai Bhabi kaha hai?"
+  });
 });
 
+
+// Use routers for specific API routes
+app.use(authRouter);  // Authentication routes (sign up, login, etc.)
+app.use(urlRouter);   // URL creation or redirection routes
+app.use(userRouter);  // User-specific routes (e.g., fetching all URLs for a user)
+
+// Start server
+app.listen(port, () => {
+  console.log("Server is listening at port " + port);
+});
+	
