@@ -5,10 +5,10 @@ dotenv.config();
 console.log("Redis__:", process.env.REDIS_URL);
 
 const redisClient = new Redis({
-  socket: {
+  
     host: process.env.REDIS_URL,
-    port: 6379
-  },
+    port: 6379,
+  
   password: "AkshyansuPritam17",
   username: "default",
 });
