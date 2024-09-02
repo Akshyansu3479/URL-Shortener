@@ -1,2 +1,5 @@
 node_modules/
 .env
+.bash_profile
+.en
+.env
