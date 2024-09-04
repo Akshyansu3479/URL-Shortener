@@ -1,9 +1,0 @@
-export NODE_ENV=development
-export CLIENT_PROD_URL=http://localhost:3000
-export DB_URL=mongodb+srv://akshyansupritam7:DLJd46ieeFmPzsBJ@cluster0.l6egj.mongodb.net/
-export REDIRECT_URL=http://localhost:8080
-export Port=8080
-export REDIS_URL=master.redis-url-shortener-rate-limiter.puaofd.aps1.cache.amazonaws.com:6379
-export REDIS_PASSWORD=AkshyansuPritam17
-export NO_OF_HITS=100
-export RATELIMIT_EXPIRE_TIME=60
